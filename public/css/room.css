@@ -1,0 +1,138 @@
+	body,html{
+			height: 100%;
+			margin: 0;
+			background: white	;
+	        color: #272a2e;
+	        overflow: hidden;
+
+		}
+
+		.chat{
+			margin-top: 40px;	
+			margin-bottom: auto;
+		}
+		.card{
+			height: 500px;
+			border-radius: 15px !important;
+			background-color:  white !important;
+		}
+		.contacts_body{
+			padding:  0.75rem 0 !important;
+			overflow-y: auto;
+			white-space: nowrap;
+		}
+		.msg_card_body{
+			overflow-y: auto;
+		}
+		.card-header{
+			border-radius: 15px 15px 0 0 !important;
+			border-bottom: 0 !important;
+		}
+	 .card-footer{
+		border-radius: 0 0 15px 15px !important;
+			border-top: 0 !important;
+	}
+		.container{
+			align-content: center;
+		}
+		.type_msg{
+			background-color: white !important;
+			color:#272a2e !important;
+			height: 60px !important;
+			overflow-y: auto;
+			border:1px solid #ced4da;
+   			border-top-right-radius: 15px;
+   			border-bottom-right-radius: 15px;
+
+		}
+			.type_msg:focus{
+		     box-shadow:none !important;
+           	outline:0px !important;
+			border:1px solid #ced4da;
+
+		}
+	
+		
+		.contacts{
+			list-style: none;
+			padding: 0;
+		}
+		.contacts li{
+			width: 100% !important;
+			padding: 5px 10px;
+			margin-bottom: 15px !important;
+		}
+	.user_info{
+		margin-top: auto;
+		margin-bottom: auto;
+		margin-left: 15px;
+	}
+	.user_info span{
+		font-size: 20px;
+		color: #272a2e;
+	}
+
+	.msg_cotainer{
+		margin-top: auto;
+		margin-bottom: auto;
+		margin-left: 10px;
+		border-radius: 15px;
+		background-color: white;
+		padding: 10px;
+		position: relative;
+		border: 1px solid #ced4da;
+	}
+	.msg_cotainer_send{
+		margin-top: auto;
+		margin-bottom: auto;
+		margin-right: 10px;
+		border-radius: 15px;
+		background-color: white;
+		padding: 10px;
+		position: relative;
+	}
+	.msg_time{
+		position: absolute;
+		left: 0;
+		bottom: -15px;
+		color: #292b2e;
+		font-size: 10px;
+	}
+	.msg_time_send{
+		position: absolute;
+		right:0;
+		bottom: -15px;
+		color: #272a2e;
+		font-size: 10px;
+	}
+	.msg_head{
+		position: relative;
+	}
+	#action_menu_btn{
+		position: absolute;
+		right: 10px;
+		top: 10px;
+		color: #272a2e;
+		cursor: pointer;
+		font-size: 20px;
+	}
+	.send_btn{
+		border-radius: 15px;
+	}
+ 
+@media (max-width: 770px){
+	.contacts_card{
+		display: none;
+	}
+	.chat{
+			margin-top: -50px;	
+			
+		}
+		.msg_head{display: none}
+		.card{border:none ;	}
+		.card-footer{
+			width: 100%;
+   			margin: 0;
+    		padding: 0;
+    	}
+}
