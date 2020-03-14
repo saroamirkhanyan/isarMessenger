@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+	<title>ChatRoom</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link href="../fonts/fontawesome-5.9.0/css/all.css" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href="/css/bootstrap/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="/css/room.css">
+	<link rel="icon" href="/img/chat.png">
+
+
+</head>
+
+<body>
+
+	<div class="justify-content-center" style="height: 100%;width: 100%;" id='app'>
+
+
+		<div style="height: 100%;width: 100%;">
+
+			<div class="card" id="card" style="height:100%;width: 100%;">
+
+				<div class="card-header msg_head">
+					<div class="bd-highlight">
+						<div class="user_info">
+							<span class="users_mobile" onclick="openNav()">&#9776;</span>
+							<span class="roomName"></span>
+						</div>
+
+					</div>
+				</div>
+
+
+				<div class="card-body msg_card_body" ref='messages' style="overflow-y: scroll;">
+					<div v-bind:class="'d-flex mb-4 justify-content-' +message.float" v-for='message in messages'>
+						<div class="msg_cotainer">
+							<p class="h5">{{message.text}}</p>
+							<span class="h6 float-right">{{message.author}}</span>
+						</div>
+					</div>
+					<br>
+					<div class="write"></div>
+				</div>
+
+				<div class="card-footer">
+					<div class="input-group">
+						<input name="message" v-on:keypress='keymonitor' ref="message" class="form-control type_msg"
+							placeholder="Type your message...">
+						<div class="input-group-append">
+							<button class="input-group-text send_btn" @click='send'><i
+									class="far fa-paper-plane"></i></button>
+						</div>
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</div>
+
+
+
+
+
+	<script type="text/javascript" src="/socket.io/socket.io.js"></script>
+	<script src="js/vue.js"></script>
+	<script>
+
+		let vue = new Vue({
+			el: "#app",
+			data: {
+				
+				messages: [
+					{ text: "Barev", author: "Saro", float: 'start' }
+				],
+			},
+
+			created: function () {
+				var socket = io.connect();
+				socket.emit('joinRoom', { roomName: this.roomName, userName: this.userName })
+				socket.on('newuserjoined', (userName) => {
+					alert(userName)
+				})
+
+
+
+			},
+			
+			methods: {
+				scrollMessages:function(){
+					this.$refs.messages.scrollTop = this.$refs.messages.scrollHeight;
+				},
+				keymonitor: function (event) {
+					if (event.key == 'Enter') { this.send() };
+				},
+				send: function () {
+					if (this.$refs.message.value) {
+						this.messages.push({ text: this.$refs.message.value, author: this.userName, float: 'end' })
+						this.$refs.message.value = '';
+						
+					}
+			
+					//this.$refs.messages.scrollBy(0,this.$refs.messages.scrollHeight);	
+				},
+
+			},
+
+		})
+	</script>
+</body>
+
+</html>

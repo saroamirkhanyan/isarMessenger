@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 	<title>ChatRoom</title>
 	<meta charset="UTF-8">
@@ -8,42 +9,57 @@
 	<link rel="stylesheet" type="text/css" href="/css/main.css">
 	<link rel="icon" href="/img/chat.png">
 </head>
+
 <body>
-   <% include header.ejs %>
-	<div class="limiter">
-		
-		<div class="container-login100">
-			<div class="wrap-login100 p-b-160 p-t-50">
-				<form class="login100-form validate-form" method="POST" action="/room">
-					<span class="login100-form-title p-b-43 lang" key='join_room'>
-						Join Room
-					</span>
-
-					<div class="wrap-input100 rs1 validate-input" data-validate = "Room Name is required" style="margin-top: 10px;">
-						<input class="input100 lang" type="text" name='room' key='room_name' placeholder="Room Name">
-						
-					</div>
-					
-					
-					<div class="wrap-input100 rs2 validate-input" data-validate="Name is required" style="margin-top: 10px">
-						<input class="input100 lang" type="text" key='user_name' name="name" placeholder="Your Name">
-					</div>
-
-					<div class="container-login100-form-btn">
-						<button class="login100-form-btn lang" key='join'>
-							Join
-						</button>
-					</div>
-				</form>
-			</div>
+	<% include header.ejs %>
+	<div class="container-fluid login-container" id='app'>
+		<div class="col-md-6 login-form-1 col-sm-12">
+			<h3>Միանալ Խմբին</h3>
+			<form>
+				<div class="form-group">
+					<input type="text" ref='roomName' class="form-control" placeholder="Խմբի Անունը" />
+				</div>
+				<div class="form-group">
+					<input type="text" ref='userName' class="form-control " placeholder="Ձեր Մուտքանունը" />
+				</div>
+				<div class="form-group">
+					<button class="btnSubmit" type='button' v-on:click='join'>Միանալ</button>
+				</div>
+			</form>
 		</div>
 	</div>
-	<script src="js/jquery.js"></script>
-	<script  src="js/bootstrap/bootstrap.min.js"></script>
-	<script src="js/bootstrap/bootstrap.bundle.min.js"></script>
-	<script src="js/language.js"></script>
-	<script src="js/translate.js"></script>
-	<script src="js/main.js"></script>
+
+	<script src="js/vue.js"></script>
+	<script>
+		history.pushState(null, null, document.URL);
+		new Vue({
+			el: '#app',
+			methods: {
+				join: function () {
+					fetch('/room',{
+						method:"POST",
+						headers: {
+							'Content-Type': 'application/json',
+						},
+						body:JSON.stringify({
+							roomName:this.$refs.roomName.value,
+							userName:this.$refs.userName.value,
+						})
+					})
+					.then(res=>res.json())
+					.then(data=>{
+						if(!data.err){
+							window.location.assign(`/room?roomName=${data.roomName}&userName=${data.userName}`)
+						}
+						console.log(data);
+					})
+				
+				}
+			}
+
+		})
+	</script>
 
 </body>
+
 </html>

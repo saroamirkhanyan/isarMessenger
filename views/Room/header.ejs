@@ -1,0 +1,20 @@
+<div id="sideNavigation" class="sidenav">
+  <a class='sideNavigationTop'>Առցանց Օգտվողվեր</a>
+  <a v-for='user in users' class='user'>
+    <i class="fas fa-user"></i> {{user}}</a>
+</div>
+
+<!-- <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a> -->
+
+<div class="card-header navbar">
+  <div class="bd-highlight w-100">
+    <div>
+      <a href='/' style="font-size: 20px;color: white;"><i class="fas fa-arrow-left"></i></a>
+      <span class="roomName ml-1" style='font-size:20px;color: white;'>{{roomName}}</span>
+      <span class="float-right" style='font-size:20px;cursor: pointer;color: white;' @click='openNav'><i
+          class="fas fa-bars"></i></span>
+
+    </div>
+
+  </div>
+</div>

@@ -6,7 +6,7 @@
         'lang': 'Language',
         'join': 'Join',
         'online_users':'Online Users',
-        'welcome':'Welcome To ChatRoom',
+        'welcome':'Welcome To isar Messenger',
         'admin':'admin',
         'type_msg':'Type Your Message'
       },
@@ -17,7 +17,7 @@
         'join': 'Մուտք',
         'lang': 'լեզու',
         'online_users':'Առցանց օգտվողներ',
-        'welcome':'Բարի Գալուստ ChatRoom',
+        'welcome':'Բարի Գալուստ isar Messenger',
         'admin':'ղեկավար',
         'type_msg':'Գրեք ձեր նամակը'
       },
@@ -28,7 +28,7 @@
         'join': 'Присоединиться',
         'lang': 'язык',
         'online_users':'Пользователи онлайн',
-        'welcome':'Добро пожаловать в ChatRoom',
+        'welcome':'Добро пожаловать в isar Messenger',
         'admin':'админ',
         'type_msg':'Введите ваше сообщение'
       }

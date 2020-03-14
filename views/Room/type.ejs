@@ -1,0 +1,9 @@
+<div class="card-footer" @click='closeNav'>
+    <div class="input-group">
+      <input name="message" v-on:keydown='keymonitor' ref="message" class="form-control type_msg"
+        placeholder="Ձեր Հաղորդագրությունը...">
+      <div class="input-group-append">
+        <button class="input-group-text sendMessageButton rounded-circle" @click='send'><i class="far fa-paper-plane"></i></button>
+      </div>
+    </div>
+  </div>

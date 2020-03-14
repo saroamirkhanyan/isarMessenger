@@ -1,103 +1,158 @@
-//Miacum Gradarannerin
+
 let express = require('express');
-let app 	= express();
-let server 	= require('http').Server(app);
-let io 		= require('socket.io')(server);
-//Serveri Porti Haytararum
-let PORT 	= process.env.PORT || 80;
-// Senyakneri Ojecti Haytararum
-let rooms 	= {};
-//Senyakineri Xekavarman Funkcianer
-var setroom = {
-	create:function(room,name){
-		rooms[room] = {};
-		rooms[room][name] = {};
-		console.log(`${name} -y stexcec senyak ${room} anunov`)
-		console.log(`${name} mtav ${room}`)
-	},
-	newuser:function (room,name) {
-		rooms[room][name] = {};
-		console.log(`${name} mtav ${room}`)
-	},
-	removeuser:function (room,name){
-		delete rooms[room][name];
-		console.log(`${name} -y durs ekav ${room} - ic`)
-	},
-	remove:function (room) {
-		delete rooms[room];
+let app = express();
+let server = require('http').Server(app);
+let io = require('socket.io')(server);
+
+const bodyParser = require('body-parser')
+let PORT = process.env.PORT || 80;
+
+let rooms = {};
+
+class Room {
+
+	constructor(roomName, userName) {
+		if (rooms[roomName]) {
+			if (userName in rooms[roomName]) {
+				this.err = true;
+			}
+			else {
+				rooms[roomName][userName] = { on: false };
+				this.err = false;
+			}
+
+		}
+
+		else {
+			rooms[roomName] = {
+				[userName]: { on: false },
+			}
+			this.err = false;
+		}
+
+	}
+	static roomLength(roomName) {
+		var size = 0, key;
+		for (key in rooms[roomName]) {
+			if (rooms[roomName].hasOwnProperty(key)) size++;
+		}
+		return size;
+	}
+
+	static checkUser(roomName, userName) {
+		if ((roomName in rooms) && (userName in rooms[roomName])) {
+			if (!rooms[roomName][userName].on) {
+				rooms[roomName][userName].on = true;
+				return true;
+			}
+
+		}
+		return false;
+	}
+
+	static deleteUser(roomName, userName) {
+		if (roomName in rooms && userName in rooms[roomName]) {
+			if (Room.roomLength(roomName) == 1) {
+				delete rooms[roomName];
+			} else {
+				delete rooms[roomName][userName];
+			}
+		}
+
+
 	}
 }
-//Senyaknery hashvelu funkcia
-Object.size = function(obj) {
-var size = 0, key;
-for (key in obj) {
-if (obj.hasOwnProperty(key)) size++;
-	 }
-return size;
-	};
-// popoxakani arkayutyan stugman funkcia
-function isset(variable){
-    if( typeof variable !== 'undefined' ) {
-        return true;
-    }
-    return false;
-}	
 
-app.use(express.urlencoded({ extended: true }))
+
+
+app.use(express.urlencoded({ extended: false }))
+app.use(bodyParser())
 app.use(express.static('public'))
-app.set('view engine','ejs');
-app.get('/',(req,res)=>{res.render('index')})
-app.post('/room',(req,res)=>{
-	let room =req.body.room;
-	let name = req.body.name;
-	if(room == '' || name == ''){console.log('Tvyalnery Mutqagrvac chen!');res.redirect('/')}
-	else{res.redirect(`/${room}/${name}`)}
-	})
-app.get('/:room/:name',(req,res)=>{
-	let room = req.params.room;
-	let name = req.params.name;
-	if(rooms[room] != undefined){
-		if(rooms[room][name] != undefined){
-			res.redirect('/')
+app.set('view engine', 'ejs');
+app.get('/', (req, res) => { res.render('index') })
+
+app.post('/room', (req, res) => {
+	let roomName = req.body.roomName;
+	let userName = req.body.userName;
+	if (roomName && userName) {
+
+		if (new Room(roomName, userName).err) {
+			res.send({ err: true })
+		} else {
+			res.send({ err: false, roomName, userName })
 		}
-		else{
-			setroom.newuser(room,name);
-			res.render('room',{'room':room,'name':name,'users':rooms[room]})
-		}
+
 	}
-	else{
-		setroom.create(room,name);
-		res.render('room',{'room':room,'name':name,'users':rooms[room]})
+
+})
+
+
+app.get('/room', (req, res) => {
+	let roomName = req.query.roomName;
+	let userName = req.query.userName;
+	if (!roomName || !userName) return res.redirect('/');
+	if (Room.checkUser(roomName, userName)) {
+
+		return res.render('Room/room', { roomName, userName })
+	}
+	else {
+		return res.redirect('/')
 	}
 })
 
-io.on('connection',(socket)=>{
+var intervalID = null;
 
-	socket.on('join_room',(room,name)=>{
-		//setTimeout(() => socket.disconnect(true), 1000 *60 * 15);
-		socket.join(room);
+const interavalDuration = 1000 * 60 * 6;
+
+function intervalManager(flag, animate, time) {
+   if(flag)
+     intervalID =  setInterval(animate, time);
+   else
+     clearInterval(intervalID);
+}
+
+
+io.on('connection', (socket) => {
+	
+	socket.on('joinRoom', (userData) => {
+		if(Room.checkUser(userData.roomName,userData. userName)){socket.disconnect(true)}
+		userData.active = false;
+		function checkActive (){
+			if(userData.active){userData.active = false;}
+			else{
+				socket.disconnect(true)
+				intervalManager(false)
+
+			}
+			
+		}
+		intervalManager(true,checkActive,interavalDuration)
 		
-		socket.to(room).emit('joined_user',name);
 		
-		socket.on('disconnect', (reason) => {
-  			socket.to(room).emit('disconnected',name);	
-			if(room in rooms){
-        		if(name in rooms[room]){ 
-        			    setroom.removeuser(room,name) 
-						let size = Object.size(rooms[room]);
-						if (size == 0) {setroom.remove(room)}
-        		}else{}
-        	}else{}
- 		 });
+		socket.emit('users', Object.keys(rooms[userData.roomName]))
 
-		 socket.on('message',(name,message)=>{
-		 	console.log(name + ' wrote: ' + message + ' in ' + room)
-		 	socket.to(room).emit('message',name,message)
-		 })
+		socket.join(userData.roomName);
 
-		  socket.on('typing', (name) => {
-		  socket.to(room).emit('typing',name)
-		  });
+		socket.to(userData.roomName).emit('newuserjoined', userData.userName);
+
+		socket.on('sendMessage', (messageData) => {
+			userData.active = true;
+			//console.log(userData,messageData)
+			socket.to(userData.roomName).emit("getMessage", { text: messageData.text, author: userData.userName })
+		})
+
+		socket.on('sendTyping', () => {
+			socket.to(userData.roomName).emit('getTyping', userData.userName)
+		})
+
+		socket.on('disconnect', () => {
+			Room.deleteUser(userData.roomName, userData.userName);
+			socket.to(userData.roomName).emit('disConnected', userData.userName)
+			//console.log(userData.userName + " Disconencted!")
+		})
+
+
 	})
 })
-server.listen(PORT,()=>{console.log(`Server Listened is ${PORT} PORT!`)})
+
+server.listen(PORT, () => { console.log(`Server Listened is ${PORT} PORT!`) })

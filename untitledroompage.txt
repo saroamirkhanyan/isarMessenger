@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>ChatRoom</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link href="../fonts/fontawesome-5.9.0/css/all.css" rel="stylesheet">
+		<link rel="stylesheet" type="text/css" href="/css/bootstrap/bootstrap.css">
+		<link rel="stylesheet" type="text/css" href="/css/room.css">
+		<link rel="icon" href="/img/chat.png">
+	</head>
+	<body > 
+		<div id="mySidenav" class="sidenav">
+			<a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+			<a class="navbar-brand" href="/">ChatRoom</a> 			
+			<div class="card-header lang" key='online_users' >Online Users</div>
+			<ul class="contacts">
+				<li class="users_list">
+					<%Object.keys(users).forEach((user)=>{%>
+					<div class="d-flex bd-highlight" id='<%=user%>'>
+						<div class="user_info">
+							<span><%=user%></span>
+							<hr>
+						</div>
+					</div>
+					<%})%>
+				</li>
+			</ul>
+		</div>
+	
+		<div class="jumbotron-fluid h-100 " >
+			     <% include header.ejs %>
+			<div class="row justify-content-center pc_chat">
+				<div class="col-md-4 col-xl-3 chat users">
+				    <div class="card mb-sm-3 mb-md-0 contacts_card">
+						<div class="card-header lang"   key='online_users' >Online Users</div>
+						<div class="card-body contacts_body">
+							<ul class="contacts">
+								<li class="users_list">
+									<%Object.keys(users).forEach((user)=>{%>
+										<div class="d-flex bd-highlight" id='<%=user%>'>
+											<div class="user_info">
+												<span><%=user%></span>
+												<hr>
+											</div>
+										</div>
+									<%})%>
+								</li>
+							</ul>
+						</div>
+						<div class="card-footer"></div> 
+					</div>
+				</div>		
+				<div class="col-md-8 col-xl-6 chat chat_body">
+					<div class="card" id="card">
+						<div class="card-header msg_head">
+							<div class="bd-highlight">
+								<div class="user_info">	
+									<span  class="users_mobile" onclick="openNav()">&#9776;</span>	
+									<span class="roomName"><%=room%></span>
+								</div>
+									
+							</div>
+						</div>
+						<div class="card-body msg_card_body">
+							<div class="d-flex justify-content-end mb-4"><div class="msg_cotainer"><p class="lang" key='welcome'>Welcome To ChatRoom</p><span class="msg_time lang" key='admin'>Admin</span></div></div>
+							<div class="messages">
+							</div>
+							<br>
+							<div class="write" ></div>
+						</div>
+						<div class="card-footer">
+							<div class="input-group">
+								<input name="message" id="message"  class="form-control type_msg lang" key='type_msg' placeholder="Type your message...">
+								<div class="input-group-append">
+									<button class="input-group-text send_btn" id="send_message"><i class="far fa-paper-plane"></i></button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script src="/js/jquery.js" ></script>
+		<script type="text/javascript">let room = '<%=room%>';let name = '<%=name%>';</script> 
+		<script  src="/js/bootstrap/bootstrap.min.js"></script>
+		<script src="/js/bootstrap/bootstrap.bundle.min.js"></script>
+		<script type="text/javascript" src="/socket.io/socket.io.js"></script>
+		<script type="text/javascript" src="/js/swal.js"></script>
+		<script type="text/javascript" src='/js/room.js'></script>
+		<script src="/js/language.js"></script>
+		<script src="/js/translate.js"></script>
+	</body>
+</html>
