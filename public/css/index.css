@@ -21,9 +21,10 @@ html,body{
   text-decoration: none;
   display: block;
   transition: 0.3s;
+  font-family: sans-serif;
 }
-
-.room button {
+.room .user span{    word-wrap: break-word;}
+.room .user button {
   border-radius: 5px;
   background: #007bff;
   border: 1px solid whitesmoke;

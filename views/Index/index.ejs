@@ -9,6 +9,7 @@
 	<link href="../fonts/fontawesome-5.9.0/css/all.css" rel="stylesheet">
 	<link rel="stylesheet" type="text/css" href="/css/index.css">
 	<link rel="icon" href="/img/chat.png">
+	<link rel="icon" href="/img/isarLogo.svg">
 </head>
 
 <body>
@@ -24,8 +25,11 @@
 			<div class="rooms">
 					<div>
 					<div class="room" v-if='searchResult.visible'>
-						<a class="user"><i class="fas fa-users"></i> &nbsp; {{searchResult.name}}</a>
-						<button @click='join(searchResult.name)'>{{searchResult.response ? 'Միանալ' : "Ստեղծել"}}</button>
+						<a class="user"><i class="fas fa-users"></i>
+							<button @click='join(searchResult.name)'>{{searchResult.response ? 'Միանալ' : "Ստեղծել"}}</button>
+							<span>{{searchResult.name}}</span>
+						</a>
+						
 					</div>
 					<hr>
 				</div>
@@ -64,9 +68,7 @@
 					this.getRooms();
 				}
 			},
-			updated:function(){
-				if(!this.$refs.search.value) this.searchResult.visible = false;
-			},
+
 			methods: {
 				search:function(){
 					if(this.$refs.search.value){
@@ -79,7 +81,7 @@
 							console.log(data)
 						})
 					}else{
-						this.searchResult = [];
+						this.searchResult = {visible:false};
 					}
 				
 				},
@@ -97,7 +99,7 @@
 				},
 				inputUserName: function (cb) {
 					Swal.fire({
-						title: 'Մուտքագրեք ձեր մուտքանունը',
+						title: 'Մուտքագրեք ձեր օգտանունը',
 						input: 'text',
 						inputAttributes: {
 							autocapitalize: 'off'
