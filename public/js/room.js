@@ -11,20 +11,11 @@ let vue = new Vue({
 
 	created: function () {
 
-		socket.on('connect_error', (error) => {
-			alert('Դուք անջատվել եք ցանցից');
-			window.location.assign('/');
-		});
+		socket.on('connect_error',this.errorAlert);
 
-		socket.on('reconnect', (attemptNumber) => {
-			alert('Դուք անջատվել եք ցանցից');
-			window.location.assign('/');
-		});
+		socket.on('reconnect', this.errorAlert);
 
-		socket.on('disconnect', () => {
-			alert('Դուք անջատվել եք ցանցից');
-			window.location.assign('/');
-		})
+		socket.on('disconnect',this.errorAlert)
 
 
 		socket.on('users', (users) => {
@@ -35,7 +26,7 @@ let vue = new Vue({
 
 
 		socket.on('newuserjoined', (userName) => {
-			this.messages.push({ text: `${userName}-ն միացավ`, author: '', float: 'center border-0' })
+			this.messages.push({ text: `${userName}-ն միացավ`, author: '', float: 'center' })
 			this.users.push(userName)
 			this.scrollMessages();
 		})
@@ -43,12 +34,12 @@ let vue = new Vue({
 		socket.on('disConnected', (userName) => {
 			let index = this.users.indexOf(userName);
 			this.users.splice(index, 1);
-			this.messages.push({ text: `${userName}-ն անջատվեց`, author: '', float: 'center border-0' })
+			this.messages.push({ text: `${userName}-ն անջատվեց`, author: '', float: 'center' })
 			this.scrollMessages();
 		})
 
 		socket.on('getMessage', (data) => {
-			this.messages.push({ text: data.text, author: data.author, float: 'start' })
+			this.addMessage(data,float='start')
 			this.scrollMessages();
 		})
 
@@ -56,12 +47,19 @@ let vue = new Vue({
 			this.write.userName = userName;
 			setTimeout(() => {
 				this.write.userName = '';
-			}, 1000);
+			}, 1500);
 
 		})
 	},
 
 	methods: {
+		errorAlert:function(){
+			swal('Դուք անջատվել եք ցանցից').then(()=>{window.location.assign('/')})
+		},
+		addMessage:function(data){
+			data.type = data.float != 'center' ? 'message' : 'iserinfo' 
+			this.messages.push({ text: data.text, author: data.author, float: data.float,type:data.type })
+		},
 		openNav: function () {
 			document.getElementById("sideNavigation").style.width = "250px";
 			document.getElementById('sideNavigation').style.borderLeft = '2px solid #dee2e6';
@@ -81,7 +79,7 @@ let vue = new Vue({
 		send: function () {
 			if (this.$refs.message.value) {
 				socket.emit('sendMessage', { text: this.$refs.message.value })
-				this.messages.push({ text: this.$refs.message.value, author: this.userName, float: 'end' })
+				this.addMessage({ text: this.$refs.message.value, author: this.userName, float: 'end' })
 				this.$refs.message.value = '';
 				this.$refs.message.focus();
 				this.scrollMessages();

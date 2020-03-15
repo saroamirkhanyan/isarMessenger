@@ -4,22 +4,22 @@
     padding:15px 20px;
     color: white !important;
     height: 54px;
-    background:rgb(0, 98, 204);
+    background:#007bff;
 
 }
 .message.justify-content-end >.msg_cotainer > p{
-    background-color: rgb(0, 98, 204);
+    background-color: #007bff;
     color: white;
 }
 .type_msg{
     border-radius: 15px !important;
 }
 .navbar{
-    background: rgb(0, 98, 204);
+    background: #007bff;
     border: none !important;
 }
 .sendMessageButton{
-    background: rgb(0, 98, 204);
+    background: #007bff;
     color: white;
     width: 40px;
     height: 40px;
@@ -29,6 +29,9 @@
 }
 
 .center{margin: 0px auto;}
+.write > p {
+    font-size: 15px;
+}
 .write{
     height: 40px;
     padding: 10px;
@@ -58,7 +61,7 @@
 .sidenav a.user{
     font-size: 25px;
     margin: 0px auto;
-    background: rgb(0, 98, 204);
+    background: #007bff;
     color: white;
     padding: 3px 20px;
     text-align: end;

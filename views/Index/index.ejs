@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<title>ChatRoom</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" type="text/css" href="/css/bootstrap/bootstrap.min.css">
+	<link href="../fonts/fontawesome-5.9.0/css/all.css" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href="/css/index.css">
+	<link rel="icon" href="/img/chat.png">
+</head>
+
+<body>
+	<div id='app'>
+		<% include header.ejs %>
+
+		<div class="container">
+
+			<div class="input-group mt-2">
+				<input ref="search" @input='search' class="form-control" placeholder="Փնտրել">
+			</div>
+
+			<div class="rooms">
+				<div>
+					<div class="room" v-if='searchResult.length' v-for='result in searchResult'>
+						<a class="user"><i class="fas fa-users"></i> &nbsp; {{result.name}}</a>
+						<button @click='join(result.name)'>{{result.response ? 'Միանալ' : "Ստեղծել"}}</button>
+					</div>
+					<hr>
+				</div>
+	
+
+				<div class="room" v-for='room in rooms'>
+					<a class="user"><i class="fas fa-users"></i> &nbsp; {{room}}</a>
+					<button @click='join(room)'>Միանալ</button>
+				</div>
+
+
+			</div>
+		</div>
+
+
+	</div>
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+	<script src="js/swal.js"></script>
+	<script src="js/vue.js"></script>
+	<script>
+		history.pushState(null, null, document.URL);
+		let vue = new Vue({
+			el: '#app',
+			data: { rooms: [],userName:null,searchResult:[]},
+
+			created: function () {
+
+				if (!this.getCookie('userName')) {
+					this.inputUserName((result)=>{
+							this.setCookie('userName', result.value, 100)
+							this.userName = result.value;
+							this.getRooms();
+					})
+				} else {
+					this.userName = this.getCookie('userName');
+					this.getRooms();
+				}
+			},
+			methods: {
+				search:function(){
+					if(this.$refs.search.value){
+						fetch(`/search?keyword=${this.$refs.search.value}`)
+					.then(res => res.json())
+						.then(data => {
+							if(!data.err){
+								if(data.room){
+									this.searchResult = data.room;
+								}else{
+									this.searchResult = [{name:this.$refs.search.value,response:false}];
+								}
+							}
+							console.log(data)
+						})
+					}else{
+						this.searchResult = [];
+					}
+				
+				},
+				getRooms: function () {
+					fetch('/getrooms')
+						.then(res => res.json())
+						.then(data => {
+							if(!data.err){
+								if(data.rooms.length){
+									this.rooms = data.rooms;
+								}
+							}
+							console.log(data)
+						})
+				},
+				inputUserName: function (cb) {
+					Swal.fire({
+						title: 'Մուտքագրեք ձեր մուտքանունը',
+						input: 'text',
+						inputAttributes: {
+							autocapitalize: 'off'
+						},
+						confirmButtonText: 'Վերջ',
+						confirmButtonColor: '#007bff',
+					}).then((result) => {
+						if (!result.value) {
+							this.inputUserName()
+						} else {
+							cb(result);
+
+						}
+
+					})
+				},
+				getCookie: function (cname) {
+					var name = cname + "=";
+					var decodedCookie = decodeURIComponent(document.cookie);
+					var ca = decodedCookie.split(';');
+					for (var i = 0; i < ca.length; i++) {
+						var c = ca[i];
+						while (c.charAt(0) == ' ') {
+							c = c.substring(1);
+						}
+						if (c.indexOf(name) == 0) {
+							return c.substring(name.length, c.length);
+						}
+					}
+					return "";
+				},
+				setCookie: function (cname, cvalue, exdays) {
+					var d = new Date();
+					d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+					var expires = "expires=" + d.toUTCString();
+					document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+				},
+
+				join: function (roomName) {
+					console.log(roomName,this.userName)
+					fetch('/room', {
+						method: "POST",
+						headers: {
+							'Content-Type': 'application/json',
+						},
+						body: JSON.stringify({
+							roomName: roomName,
+							userName: this.userName,
+						})
+					})
+						.then(res => res.json())
+						.then(data => {
+							if (!data.err) {
+								window.location.assign(`/room?roomName=${data.roomName}&userName=${data.userName}`)
+							}
+							else{
+								this.inputUserName((result)=>{
+									this.setCookie('userName', result.value, 100);
+									this.userName = result.value;
+									this.join(roomName);
+								});
+								
+							}
+							
+						})
+
+			 }
+			}
+
+		})
+	</script>
+
+</body>
+
+</html>

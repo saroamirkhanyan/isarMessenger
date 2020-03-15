@@ -8,7 +8,6 @@ const bodyParser = require('body-parser')
 let PORT = process.env.PORT || 80;
 
 let rooms = {};
-
 class Room {
 
 	constructor(roomName, userName) {
@@ -17,6 +16,7 @@ class Room {
 				this.err = true;
 			}
 			else {
+				rooms[roomName].length +=1;
 				rooms[roomName][userName] = { on: false };
 				this.err = false;
 			}
@@ -25,7 +25,9 @@ class Room {
 
 		else {
 			rooms[roomName] = {
+				length:1,
 				[userName]: { on: false },
+				
 			}
 			this.err = false;
 		}
@@ -52,10 +54,11 @@ class Room {
 
 	static deleteUser(roomName, userName) {
 		if (roomName in rooms && userName in rooms[roomName]) {
-			if (Room.roomLength(roomName) == 1) {
+			if (rooms[roomName].length == 1) {
 				delete rooms[roomName];
 			} else {
 				delete rooms[roomName][userName];
+				rooms[roomName].length--;
 			}
 		}
 
@@ -69,7 +72,35 @@ app.use(express.urlencoded({ extended: false }))
 app.use(bodyParser())
 app.use(express.static('public'))
 app.set('view engine', 'ejs');
-app.get('/', (req, res) => { res.render('index') })
+app.get('/', (req, res) => { res.render('Index/index');console.log(rooms) })
+
+app.get('/search',(req,res)=>{
+	let RoomNames = Object.keys(rooms);
+	for(let i = 0;i<RoomNames.length;i++){
+		if(req.query.keyword == RoomNames[i]){
+			return res.send({err:false,data:RoomNames[i]})
+		}
+	}
+	return res.send({err:false,room:null})
+	
+})
+
+app.get('/getrooms', (req, res) => {
+	let RoomNames = Object.keys(rooms);
+	if(!RoomNames.length) return res.send({err:false,rooms:[]});
+	else if(RoomNames.length && RoomNames.length < 2) return res.send({err:false,rooms:RoomNames});
+	for(let i = 0;i<RoomNames.length-1;i++){
+		for(let j =0;j<RoomNames.length-1-i;j++){
+			if(+rooms[RoomNames[j]].length < +rooms[RoomNames[j+1]].length){
+				[RoomNames[j],RoomNames[j+1]] = [RoomNames[j+1],RoomNames[j]] 
+			}
+		}
+		
+	}
+	return res.send({err:false,rooms:RoomNames.slice(0,10)});
+	console.log(RoomNames)
+
+})
 
 app.post('/room', (req, res) => {
 	let roomName = req.body.roomName;
@@ -100,35 +131,41 @@ app.get('/room', (req, res) => {
 	}
 })
 
-var intervalID = null;
 
-const interavalDuration = 1000 * 60 * 6;
+const interavalDuration = 1000 * 60 * 1;
 
-function intervalManager(flag, animate, time) {
-   if(flag)
-     intervalID =  setInterval(animate, time);
-   else
-     clearInterval(intervalID);
-}
 
 
 io.on('connection', (socket) => {
-	
+
 	socket.on('joinRoom', (userData) => {
-		if(Room.checkUser(userData.roomName,userData. userName)){socket.disconnect(true)}
+		if (Room.checkUser(userData.roomName, userData.userName)) { socket.disconnect(true) }
+
+		let intervalID = null;
+
+		function intervalManager(flag, animate, time) {
+			if (flag)
+				intervalID = setInterval(animate, time);
+			else
+				clearInterval(intervalID);
+		}
+
+
 		userData.active = false;
-		function checkActive (){
-			if(userData.active){userData.active = false;}
-			else{
+		function checkActive() {
+			if (userData.active) { userData.active = false; }
+			else {
+				console.log(userData.userName + 'AutoDisconnected!')
 				socket.disconnect(true)
 				intervalManager(false)
 
 			}
-			
+
 		}
-		intervalManager(true,checkActive,interavalDuration)
-		
-		
+
+		intervalManager(true, checkActive, interavalDuration)
+
+
 		socket.emit('users', Object.keys(rooms[userData.roomName]))
 
 		socket.join(userData.roomName);
@@ -146,6 +183,7 @@ io.on('connection', (socket) => {
 		})
 
 		socket.on('disconnect', () => {
+			intervalManager(false);
 			Room.deleteUser(userData.roomName, userData.userName);
 			socket.to(userData.roomName).emit('disConnected', userData.userName)
 			//console.log(userData.userName + " Disconencted!")

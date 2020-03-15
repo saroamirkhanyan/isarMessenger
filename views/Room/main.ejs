@@ -1,10 +1,13 @@
 <div class="card-body msg_card_body" @click='closeNav' ref='messages'
 style="overflow-y: scroll;display: flex;flex-direction: column;">
 <div v-bind:class="'d-flex mb-4 message justify-content-' +message.float " style="max-width: 100%" v-for='message in messages'>
-  <div class="msg_cotainer" style="max-width: 50%;">
-    <p class="h5 p-1 border rounded">{{message.text}}</p>
-    <span class="h6 float-right">{{message.author}}</span>
+
+  <div class="msg_cotainer" style="max-width:70%">
+    <p class="h5 p-1 border rounded" v-if="message.type == 'message'">{{message.text}}</p>
+    <p class="h5 p-1" v-else>{{message.text}}</p>
+    <span class="h6 float-right" v-if="message.type == 'message'">{{message.author}}</span>
   </div>
+
 </div>
 <br>
 </div>
