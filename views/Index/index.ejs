@@ -66,6 +66,7 @@
 			},
 			methods: {
 				search:function(){
+					if(!this.$refs.search.value) this.searchResult.visible = false;
 					if(this.$refs.search.value){
 						fetch(`/search?keyword=${this.$refs.search.value}`)
 					.then(res => res.json())
