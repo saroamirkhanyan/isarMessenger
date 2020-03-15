@@ -22,15 +22,15 @@
 			</div>
 
 			<div class="rooms">
-				<div>
-					<div class="room" v-if='searchResult.length' v-for='result in searchResult'>
-						<a class="user"><i class="fas fa-users"></i> &nbsp; {{result.name}}</a>
-						<button @click='join(result.name)'>{{result.response ? 'Միանալ' : "Ստեղծել"}}</button>
+					<div>
+					<div class="room" v-if='searchResult.visible'>
+						<a class="user"><i class="fas fa-users"></i> &nbsp; {{searchResult.name}}</a>
+						<button @click='join(searchResult.name)'>{{searchResult.response ? 'Միանալ' : "Ստեղծել"}}</button>
 					</div>
 					<hr>
 				</div>
 	
-
+				<h5>Լավագույն Խմբերը</h5>
 				<div class="room" v-for='room in rooms'>
 					<a class="user"><i class="fas fa-users"></i> &nbsp; {{room}}</a>
 					<button @click='join(room)'>Միանալ</button>
@@ -49,7 +49,7 @@
 		history.pushState(null, null, document.URL);
 		let vue = new Vue({
 			el: '#app',
-			data: { rooms: [],userName:null,searchResult:[]},
+			data: { rooms: [],userName:null,searchResult:{visible:false,response:null,name:null}},
 
 			created: function () {
 
@@ -71,11 +71,7 @@
 					.then(res => res.json())
 						.then(data => {
 							if(!data.err){
-								if(data.room){
-									this.searchResult = data.room;
-								}else{
-									this.searchResult = [{name:this.$refs.search.value,response:false}];
-								}
+								this.searchResult = {visible:true,response:data.response,name:this.$refs.search.value}
 							}
 							console.log(data)
 						})

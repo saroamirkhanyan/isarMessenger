@@ -19,6 +19,7 @@ let vue = new Vue({
 
 
 		socket.on('users', (users) => {
+			console.log(users);
 			this.users = users;
 		})
 

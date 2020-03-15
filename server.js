@@ -78,10 +78,10 @@ app.get('/search',(req,res)=>{
 	let RoomNames = Object.keys(rooms);
 	for(let i = 0;i<RoomNames.length;i++){
 		if(req.query.keyword == RoomNames[i]){
-			return res.send({err:false,data:RoomNames[i]})
+			return res.send({err:false,response:true})
 		}
 	}
-	return res.send({err:false,room:null})
+	return res.send({err:false,response:false})
 	
 })
 
@@ -132,7 +132,7 @@ app.get('/room', (req, res) => {
 })
 
 
-const interavalDuration = 1000 * 60 * 1;
+const interavalDuration = 1000 * 60 * 6;
 
 
 
@@ -166,7 +166,7 @@ io.on('connection', (socket) => {
 		intervalManager(true, checkActive, interavalDuration)
 
 
-		socket.emit('users', Object.keys(rooms[userData.roomName]))
+		socket.emit('users', Object.keys(rooms[userData.roomName]).slice(1))
 
 		socket.join(userData.roomName);
 

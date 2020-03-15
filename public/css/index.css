@@ -24,12 +24,13 @@ html,body{
 }
 
 .room button {
-  border-radius: 7px;
-  background: white;
-  border: none;
+  border-radius: 5px;
+  background: #007bff;
+  border: 1px solid whitesmoke;
+  color: whitesmoke;
   float: right;
   font-size: 18px;
-  margin-top: 5px;
+  margin-top: 3.5px;
 }
 
 .brand{
