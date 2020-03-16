@@ -55,6 +55,7 @@ class Room {
 	static deleteUser(roomName, userName) {
 		if (roomName in rooms && userName in rooms[roomName]) {
 			if (rooms[roomName].length == 1) {
+				console.log('Room Deleted!')
 				delete rooms[roomName];
 			} else {
 				delete rooms[roomName][userName];

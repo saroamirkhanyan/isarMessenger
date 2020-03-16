@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>ChatRoom</title>
+		<title>isar Mesenger</title>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 		<meta name="viewport" content="width=device-width, initial-scale=1">
@@ -13,7 +13,7 @@
 	<body > 
 		<div id="mySidenav" class="sidenav">
 			<a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-			<a class="navbar-brand" href="/">ChatRoom</a> 			
+			<a class="navbar-brand" href="/">isar Mesenger</a> 			
 			<div class="card-header lang" key='online_users' >Online Users</div>
 			<ul class="contacts">
 				<li class="users_list">
@@ -64,7 +64,7 @@
 							</div>
 						</div>
 						<div class="card-body msg_card_body">
-							<div class="d-flex justify-content-end mb-4"><div class="msg_cotainer"><p class="lang" key='welcome'>Welcome To ChatRoom</p><span class="msg_time lang" key='admin'>Admin</span></div></div>
+							<div class="d-flex justify-content-end mb-4"><div class="msg_cotainer"><p class="lang" key='welcome'>Welcome To isar Mesenger</p><span class="msg_time lang" key='admin'>Admin</span></div></div>
 							<div class="messages">
 							</div>
 							<br>
