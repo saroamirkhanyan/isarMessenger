@@ -1,20 +1,3 @@
-
-<html>
-	<head>
-		<link rel="stylesheet" href="css/preloader.css">
-	</head>
-	<body>
-		<div id="preloader" >
-			<img src="img/loading.gif" id='loader' alt="">
-		</div>
-		<script>
-			document.body.onload = function(){
-				document.getElementById('preloader').style.display = "none";
-			}
-	</script>
-	</body>
-</html>
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -26,11 +9,24 @@
 	<!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"> -->
 	<link href="../fonts/fontawesome-5.9.0/css/all.css" rel="stylesheet">
 	<link rel="stylesheet" type="text/css" href="/css/index.css">
-	<link rel="icon" href="/img/isarLogo.svg">
+
 </head>
 
 <body>
-	<div id='app'>
+	<link rel="stylesheet" href="css/preloader.css">
+	<link rel="icon" type="image/svg" href="img/isarLogo.svg">
+	<div id="preloader">
+		<img src="img/loading.gif" id='loader' alt="">
+	</div>
+	<script>
+
+		document.body.onload = function () {
+			document.getElementById('preloader').style.display = "none";
+			document.getElementById('app').style.display 	   = 'block';
+		}
+	</script>
+
+	<div id='app' style="display: none;">
 		<% include header.ejs %>
 
 		<div class="container">
@@ -40,49 +36,50 @@
 			</div>
 
 			<div class="rooms">
-					<div>
+				<div>
 					<div class="room" v-if='searchResult.visible'>
 						<a class="user"><i class="fas fa-users"></i>
-							<button @click='join(searchResult.name)'>{{searchResult.response ? 'Միանալ' : "Ստեղծել"}}</button>
+							<button
+								@click='join(searchResult.name)'>{{searchResult.response ? 'Միանալ' : "Ստեղծել"}}</button>
 							<span>{{searchResult.name}}</span>
 						</a>
-						
+
 					</div>
 					<hr>
 				</div>
-	
+
 				<h5>Լավագույն Խմբերը</h5>
-				
+
 				<div class="rooms">
 					<div>
-					<div class="room" v-for='room in rooms'>
-						<a class="user"><i class="fas fa-users"></i>
-							<button @click='join(room)'>Միանալ</button>
-							<span>{{room}}</span>
-						</a>
-						
+						<div class="room" v-for='room in rooms'>
+							<a class="user"><i class="fas fa-users"></i>
+								<button @click='join(room)'>Միանալ</button>
+								<span>{{room}}</span>
+							</a>
+
+						</div>
+						<hr>
 					</div>
-					<hr>
+
+
+
+
+
+
+
+
+
 				</div>
-
-
-
-
-
-
-
-
-
 			</div>
+
+
 		</div>
-
-
-	</div>
-	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
-	<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script> -->
-	<script src="js/vue.js"></script>
-	<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.11/vue.min.js"></script> -->
-	<script src='js/index.js'></script>
+		<script src="js/swal2.js"></script>
+		<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script> -->
+		<script src="js/vue.js"></script>
+		<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.11/vue.min.js"></script> -->
+		<script src='js/index.js'></script>
 
 
 </body>
