@@ -17,11 +17,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/SaroAm/ChatRoom.git"
+    "url": "git+https://github.com/SaroAm/isarMessenger.git"
   },
   "bugs": {
-    "url": "https://github.com/SaroAm/ChatRoom/issues"
+    "url": "https://github.com/SaroAm/isarMessenger/issues"
   },
-  "homepage": "https://github.com/SaroAm/ChatRoom#readme",
+  "homepage": "https://github.com/SaroAm/isarMessenger#readme",
   "description": ""
 }
